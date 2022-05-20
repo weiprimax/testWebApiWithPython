@@ -1,0 +1,41 @@
+#!/usr/bin/bash
+
+ROUTE_TODO_DB ="api/LiteDbTodoItems"
+
+CERT_CONTOSO = "contoso.com.crt"
+
+ROUTE_DEVICE_DB = "api/LiteDbDeviceItems"
+
+
+BASE_URL_LOCAL = "http://10.1.26.60:5556/"
+
+# BASE_URL_LOCAL = "http://192.168.0.112:5556/"
+
+API_TODO_LOCAL = BASE_URL_LOCAL + ROUTE_TODO_DB
+
+
+API_DEVICE_LOCAL = BASE_URL_LOCAL + ROUTE_DEVICE_DB
+
+
+BASE_URL_REMOTE = "http://10.1.16.89:5555/"
+
+API_TODO_REMOTE = BASE_URL_REMOTE + ROUTE_TODO_DB
+
+API_DEVICE_REMOTE = BASE_URL_REMOTE + ROUTE_DEVICE_DB
+
+
+BASE_URL_CONTOSO = "https://www.contoso.com/"
+
+API_TODO_CONTOSO = BASE_URL_CONTOSO + ROUTE_TODO_DB
+
+API_DEVICE_CONTOSO = BASE_URL_CONTOSO + ROUTE_DEVICE_DB
+
+
+get = "GET"
+
+post = "POST"
+
+
+
+class my_class(object):
+    pass
