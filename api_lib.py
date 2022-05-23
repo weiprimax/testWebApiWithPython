@@ -8,9 +8,9 @@ PEM_CONTOSO = "contoso.com.pem"
 ROUTE_DEVICE_DB = "api/LiteDbDeviceItems"
 
 
-# BASE_URL_LOCAL = "http://10.1.26.60:5556/"
+BASE_URL_LOCAL = "http://10.1.26.50:5556/"
 
-BASE_URL_LOCAL = "http://192.168.0.112:5556/"
+# BASE_URL_LOCAL = "http://192.168.0.112:5556/"
 
 API_TODO_LOCAL = BASE_URL_LOCAL + ROUTE_TODO_DB
 

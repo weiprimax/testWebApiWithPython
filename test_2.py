@@ -13,7 +13,6 @@ def test_answer():
 
 def test_cube():
     assert cube(2) == 8
-    #assertEquals(cube(2), 8)
 
 
 @pytest.mark.weather
@@ -52,14 +51,15 @@ def test_todo_contoso():
 @pytest.mark.contoso
 def test_todo_post_contoso():
     todo_item = post_todo_with_adapter(
-        api=API_TODO_LOCAL,
+        api=API_TODO_CONTOSO,
         post_adapter=requests_adapter_post,
         pem=PEM_CONTOSO)
     print(f'{todo_item}')
     assert todo_item.item_id >= 1
 
 
-@pytest.mark.skip(reason="no way of currently testing this")
+# @pytest.mark.skip(reason="only test in primax")
+@pytest.mark.remote
 def test_todo_remote():
     todo_items = retrieve_todo_with_adapter(
         api=API_TODO_REMOTE,
@@ -68,7 +68,8 @@ def test_todo_remote():
         assert item.item_id >= 1
 
 
-@pytest.mark.skip(reason="no way of currently testing this")
+# @pytest.mark.skip(reason="only test in primax")
+@pytest.mark.remote
 def test_todo_post_remote():
     todo_item = post_todo_with_adapter(api=API_TODO_REMOTE,
                                        post_adapter=requests_adapter_post)

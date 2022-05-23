@@ -9,7 +9,6 @@ from typing import Any, AnyStr, Callable, List as TypeList
 from api_lib import *
 
 
-
 # API_KEY = os.environ["api_key"]
 API_KEY = "a52f97f5da4ba6672b101d6780af590a"
 BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
@@ -60,14 +59,6 @@ class WeatherInfo:
 
 def main():
     print(f'hello:{API_KEY} {CERT_CONTOSO} {API_TODO_LOCAL}')
-    # weather_info = retrieve_weather_with_adapter(city="London", adapter=fake_adapter)
-    # weather_info = retrieve_weather_with_adapter(
-    #    city="London", adapter=requests_adapter)
-    # todo_item = retrieve_todo_with_adapter(
-    #    api=API_TODO_REMOTE, adapter=requests_adapter)
-    #todo_item = post_todo_with_adapter(api=API_TODO_LOCAL,
-    #                       post_adapter=requests_adapter_post)
-
     pem_path = os.path.join(os.getcwd(), PEM_CONTOSO)
     print(pem_path)
     retrieve_todo_with_adapter(
@@ -80,9 +71,6 @@ def cube(n):
 
 def requests_adapter(url: str, pem=False) -> dict:
     """An adapter that encapsulates requests.get"""
-    #s = requests.Session()
-    #s.cert = cert
-    #resp = requests.get(url)
     resp = requests.get(url, verify=pem)
     print(f'get status code:{resp.status_code}')
 
@@ -110,7 +98,7 @@ def retrieve_weather_with_adapter(
     return WeatherInfo.from_dict(data)
 
 
-def find_todo_with_adapter_for(api: str, adapter: Callable[[str], dict], pem=False) -> dict:
+def retrieve_todo_with_adapter_inner(api: str, adapter: Callable[[str], dict], pem=False) -> dict:
     """Find the todo using an adapter."""
     # url = API.format(city_name=city, api_key=API_KEY)
     url = api
@@ -121,7 +109,7 @@ def retrieve_todo_with_adapter(
     api: str, adapter: Callable[[str], dict] = requests_adapter, pem=False
 ) -> TypeList[LiteDbTodoItem]:
     """Retrieve todo implementation that uses an adapter."""
-    data = find_todo_with_adapter_for(api, adapter=adapter, pem=pem)
+    data = retrieve_todo_with_adapter_inner(api, adapter=adapter, pem=pem)
     data_len = len(data)
     items = []
     for i in range(data_len):
@@ -134,28 +122,34 @@ def retrieve_todo_with_adapter(
 
 def requests_adapter_post(url: str, body, header, pem=False) -> dict:
     """An adapter that encapsulates requests.get"""
-    resp = requests.post(url, data=json.dumps(body), headers=header, verify=pem)
+    resp = requests.post(url, data=json.dumps(body),
+                         headers=header, verify=pem)
     print(f'get status code:{resp.status_code}')
     resp.raise_for_status()
     return resp.json()
 
 
-def init_normal_header(headers: dict) -> dict:
+def init_normal_header(headers: dict):
     headers['Content-Type'] = 'application/json'
     headers['Age'] = '20'
     headers['token'] = '20'
     headers['accept'] = 'text/plain'
 
-def post_todo_with_adapter_for(api: str, post_adapter: Callable[[str, Any, Any], dict], pem=False) -> dict:
+
+def init_todo_body(body: dict):
+    body['name'] = 'go'
+    body['isComplete'] = True
+
+
+def post_todo_with_adapter_inner(api: str, post_adapter: Callable[[str, Any, Any], dict], pem=False) -> dict:
     """Find the todo using an adapter."""
     # url = API.format(city_name=city, api_key=API_KEY)
     url = api
     headers, body = {}, {}
-    headers = {}
     init_normal_header(headers)
     print(f'init:{headers}')
-    body['name'] = 'go'
-    body['isComplete'] = True
+    init_todo_body(body)
+    print(f'init:{body}')
     return post_adapter(url, body, headers, pem)
 
 
@@ -163,7 +157,8 @@ def post_todo_with_adapter(
     api: str, post_adapter: Callable[[str, Any, Any], dict] = requests_adapter, pem=False
 ) -> LiteDbTodoItem:
     """Retrieve todo implementation that uses an adapter."""
-    data = post_todo_with_adapter_for(api, post_adapter=post_adapter, pem=pem)
+    data = post_todo_with_adapter_inner(
+        api, post_adapter=post_adapter, pem=pem)
     return LiteDbTodoItem.from_dict(data)
 
 
