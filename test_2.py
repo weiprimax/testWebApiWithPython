@@ -15,7 +15,7 @@ def test_cube():
     assert cube(2) == 8
 
 
-@pytest.mark.skip(reason="do test weather")
+@pytest.mark.skip(reason="do not test weather")
 @pytest.mark.weather
 def test_weather():
     weather_info = retrieve_weather_with_adapter(
@@ -80,7 +80,7 @@ def test_todo_post_contoso():
     assert todo_item.item_id >= 1
 
 
-@pytest.mark.skip(reason="only test in primax")
+#@pytest.mark.skip(reason="only test in primax")
 @pytest.mark.remote
 def test_todo_remote():
     todo_items = retrieve_todos_with_adapter(
@@ -90,7 +90,7 @@ def test_todo_remote():
         assert item.item_id >= 1
 
 
-@pytest.mark.skip(reason="only test in primax")
+#@pytest.mark.skip(reason="only test in primax")
 @pytest.mark.remote
 def test_todo_post_remote():
     todo_item = post_todo_with_adapter(
@@ -98,3 +98,57 @@ def test_todo_post_remote():
         post_adapter=requests_adapter_post)
     print(f'{todo_item}')
     assert todo_item.item_id >= 1
+
+
+@pytest.mark.remote
+def test_device_post_remote():
+    device_respond = post_device_with_adapter(
+        api=API_DEVICE_REMOTE,
+        post_adapter=requests_adapter_post)
+    print(f'{device_respond}')
+    assert device_respond.Res_code == 1
+
+
+@pytest.mark.remote
+def test_device_remote():
+    device_items = retrieve_devices_with_adapter(
+        api=API_DEVICE_REMOTE,
+        adapter=requests_adapter)
+    for item in device_items:
+        assert item.Id >= 1
+
+
+@pytest.mark.primax
+def test_todo_primax():
+    todo_items = retrieve_todos_with_adapter(
+        api=API_TODO_PRIMAX,
+        adapter=requests_adapter)
+    for item in todo_items:
+        assert item.item_id >= 1
+
+
+@pytest.mark.primax
+def test_todo_post_primax():
+    todo_item = post_todo_with_adapter(
+        api=API_TODO_PRIMAX,
+        post_adapter=requests_adapter_post)
+    print(f'{todo_item}')
+    assert todo_item.item_id >= 1
+
+
+@pytest.mark.primax
+def test_device_post_primax():
+    device_respond = post_device_with_adapter(
+        api=API_DEVICE_PRIMAX,
+        post_adapter=requests_adapter_post)
+    print(f'{device_respond}')
+    assert device_respond.Res_code == 1
+
+
+@pytest.mark.primax
+def test_device_primax():
+    device_items = retrieve_devices_with_adapter(
+        api=API_DEVICE_PRIMAX,
+        adapter=requests_adapter)
+    for item in device_items:
+        assert item.Id >= 1
