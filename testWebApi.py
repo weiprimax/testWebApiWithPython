@@ -1,6 +1,11 @@
 from collections import defaultdict
+from ctypes.wintypes import LONG
+import dataclasses
 import os
 import json
+import time
+import calendar
+import hashlib
 import urllib.request
 import requests
 from dataclasses import asdict, dataclass
@@ -13,6 +18,36 @@ from api_lib import *
 API_KEY = "a52f97f5da4ba6672b101d6780af590a"
 BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
 API = BASE_URL + "?q={city_name}&appid={api_key}&units=metric"
+
+
+@dataclass
+class LiteDbDeviceItem:
+    Id: int
+    Device_id: str
+    Product_code: str
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "LiteDbDeviceItem":
+        return cls(
+            Id=data["id"],
+            Device_id=data["device_id"],
+            Product_code=data["product_Code"]
+        )
+
+
+@dataclass
+class LiteDbDeviceItemRespond:
+    Res_code: int
+    Message: str
+    Code: str
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "LiteDbDeviceItemRespond":
+        return cls(
+            Res_code=data["res_code"],
+            Message=data["message"],
+            Code=data["code"]
+        )
 
 
 @dataclass
@@ -58,10 +93,10 @@ class WeatherInfo:
 
 
 def main():
-    print(f'hello:{API_KEY} {CERT_CONTOSO} {API_TODO_LOCAL}')
+    print(f'hello: {CERT_CONTOSO} {API_TODO_LOCAL}')
     pem_path = os.path.join(os.getcwd(), PEM_CONTOSO)
     print(pem_path)
-    retrieve_todo_with_adapter(
+    retrieve_todos_with_adapter(
         api=API_TODO_CONTOSO, adapter=requests_adapter, pem=pem_path)
 
 
@@ -105,7 +140,7 @@ def retrieve_todo_with_adapter_inner(api: str, adapter: Callable[[str], dict], p
     return adapter(url, pem)
 
 
-def retrieve_todo_with_adapter(
+def retrieve_todos_with_adapter(
     api: str, adapter: Callable[[str], dict] = requests_adapter, pem=False
 ) -> TypeList[LiteDbTodoItem]:
     """Retrieve todo implementation that uses an adapter."""
@@ -116,8 +151,6 @@ def retrieve_todo_with_adapter(
         items.append(LiteDbTodoItem.from_dict(data[i]))
         # print(f'id:{result[i].item_id}')
     return items
-
-    # return LiteDbTodoItem.from_dict(data)
 
 
 def requests_adapter_post(url: str, body, header, pem=False) -> dict:
@@ -141,6 +174,24 @@ def init_todo_body(body: dict):
     body['isComplete'] = True
 
 
+def init_device_header(headers: dict):
+    time_stamp = str(calendar.timegm(time.gmtime()))
+    device_id = "deviceXXX"
+    str_md5_input = device_id + time_stamp
+    result = hashlib.md5(str_md5_input.encode())
+    token = result.hexdigest()
+    headers['Content-Type'] = 'application/json'
+    headers['Age'] = '20'
+    headers['token'] = token
+    headers['accept'] = 'text/plain'
+    headers['timestamp'] = time_stamp
+
+
+def init_device_body(body: dict):
+    body['device_id'] = 'deviceXXX'
+    body['product_code'] = 'TTXX'
+
+
 def post_todo_with_adapter_inner(api: str, post_adapter: Callable[[str, Any, Any], dict], pem=False) -> dict:
     """Find the todo using an adapter."""
     # url = API.format(city_name=city, api_key=API_KEY)
@@ -160,6 +211,37 @@ def post_todo_with_adapter(
     data = post_todo_with_adapter_inner(
         api, post_adapter=post_adapter, pem=pem)
     return LiteDbTodoItem.from_dict(data)
+
+
+def retrieve_devices_with_adapter(
+    api: str, adapter: Callable[[str], dict] = requests_adapter, pem=False
+) -> TypeList[LiteDbDeviceItem]:
+    data = retrieve_todo_with_adapter_inner(api, adapter=adapter, pem=pem)
+    data_len = len(data)
+    items = []
+    for i in range(data_len):
+        items.append(LiteDbDeviceItem.from_dict(data[i]))
+        # print(f'id:{result[i].item_id}')
+    return items
+
+
+def post_device_with_adapter_inner(api: str, post_adapter: Callable[[str, Any, Any], dict], pem=False) -> dict:
+    url = api
+    headers, body = {}, {}
+    init_device_header(headers)
+    print(f'init:{headers}')
+    init_device_body(body)
+    print(f'init:{body}')
+    return post_adapter(url, body, headers, pem)
+
+
+def post_device_with_adapter(
+    api: str, post_adapter: Callable[[str, Any, Any], dict] = requests_adapter, pem=False
+) -> LiteDbDeviceItemRespond:
+    """Retrieve respond after post deviceItem."""
+    data = post_device_with_adapter_inner(
+        api, post_adapter=post_adapter, pem=pem)
+    return LiteDbDeviceItemRespond.from_dict(data)
 
 
 def format_date(timestamp: int) -> str:
