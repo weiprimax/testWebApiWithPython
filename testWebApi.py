@@ -4,6 +4,7 @@ import dataclasses
 import os
 import json
 from pickle import FALSE, TRUE
+from sre_constants import IN
 import time
 import calendar
 import hashlib
@@ -20,7 +21,9 @@ API_KEY = "a52f97f5da4ba6672b101d6780af590a"
 BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
 API = BASE_URL + "?q={city_name}&appid={api_key}&units=metric"
 DEVICE_NAME = "deviceXXX"
-
+FW_VERSION_OLD = "v1.0.0"
+FW_VERSION_NEW = "v3.0.0"
+FW_VERSION_NEW2 = "v3.0.1"
 
 @dataclass
 class LiteDbDeviceItem:
@@ -38,17 +41,31 @@ class LiteDbDeviceItem:
 
 
 @dataclass
+class LiteDbDeviceItemRespondFwData:
+    new_version: str
+    fw_link: str
+
+    def from_dict(cls, data: dict) -> "LiteDbDeviceItemRespondFwData":
+        return cls(
+            new_version=data['new_Version'],
+            fw_link=data['fw_Link']
+        )
+
+
+@dataclass
 class LiteDbDeviceItemRespond:
-    Res_code: int
-    Message: str
     Code: str
+    Message: str
+    fwdata: LiteDbDeviceItemRespondFwData
 
     @classmethod
     def from_dict(cls, data: dict) -> "LiteDbDeviceItemRespond":
+        input_data = LiteDbDeviceItemRespondFwData.from_dict(
+            cls=LiteDbDeviceItemRespondFwData, data=data["data"]) if data["data"] else None
         return cls(
-            Res_code=data["res_code"],
+            Code=data["code"],
             Message=data["message"],
-            Code=data["code"]
+            fwdata=input_data
         )
 
 
@@ -160,7 +177,7 @@ def requests_adapter_post(url: str, body, header, pem=False) -> dict:
     resp = requests.post(url, data=json.dumps(body),
                          headers=header, verify=pem)
     print(f'get status code:{resp.status_code}')
-    #resp.raise_for_status()
+    # resp.raise_for_status()
     return resp.json()
 
 
@@ -201,10 +218,10 @@ def init_device_header_wrong(headers: dict):
     headers['timestamp'] = time_stamp
 
 
-def init_device_body(body: dict):
+def init_device_body(body: dict, fw_version: str):
     body['device_id'] = 'deviceXXX'
     body['product_code'] = 'TTXX'
-    body['fw_version'] = '"v2.0.0'
+    body['fw_version'] = fw_version
 
 
 def post_todo_with_adapter_inner(api: str, post_adapter: Callable[[str, Any, Any], dict], pem=False) -> dict:
@@ -240,7 +257,7 @@ def retrieve_devices_with_adapter(
     return items
 
 
-def post_device_with_adapter_inner(api: str, post_adapter: Callable[[str, Any, Any], dict], pem=False, use_right_head=True) -> dict:
+def post_device_with_adapter_inner(api: str, post_adapter: Callable[[str, Any, Any], dict], pem=False, use_right_head=True, fw_version="") -> dict:
     url = api
     headers, body = {}, {}
     if use_right_head:
@@ -249,20 +266,21 @@ def post_device_with_adapter_inner(api: str, post_adapter: Callable[[str, Any, A
         init_device_header_wrong(headers)
 
     print(f'init:{headers}')
-    init_device_body(body)
+    init_device_body(body, fw_version)
     print(f'init:{body}')
     return post_adapter(url, body, headers, pem)
 
 
 def post_device_with_adapter(
-    api: str, post_adapter: Callable[[str, Any, Any], dict] = requests_adapter, pem=False, use_right_head=True
+    api: str, post_adapter: Callable[[str, Any, Any], dict] = requests_adapter, pem=False, use_right_head=True, fw_version=""
 ) -> LiteDbDeviceItemRespond:
     """Retrieve respond after post deviceItem."""
     data = post_device_with_adapter_inner(
         api,
         post_adapter=post_adapter,
         pem=pem,
-        use_right_head=use_right_head)
+        use_right_head=use_right_head,
+        fw_version=fw_version)
     return LiteDbDeviceItemRespond.from_dict(data)
 
 

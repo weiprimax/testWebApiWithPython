@@ -46,9 +46,18 @@ def test_todo_post_local():
 def test_device_post_local():
     device_respond = post_device_with_adapter(
         api=API_DEVICE_LOCAL,
-        post_adapter=requests_adapter_post)
-    print(f'{device_respond}')
-    assert device_respond.Res_code == 1
+        post_adapter=requests_adapter_post, fw_version=FW_VERSION_OLD)
+    print(f'resp:{device_respond}')
+    assert device_respond.Code == 2000
+    assert FW_VERSION_NEW in device_respond.fwdata.new_version
+    assert "http" in device_respond.fwdata.fw_link
+    device_respond = post_device_with_adapter(
+        api=API_DEVICE_LOCAL,
+        post_adapter=requests_adapter_post, fw_version=FW_VERSION_NEW)
+    print(f'resp:{device_respond}')
+    assert device_respond.Code == 2000
+    assert FW_VERSION_NEW2 in device_respond.fwdata.new_version
+    assert "http" in device_respond.fwdata.fw_link
 
 
 @pytest.mark.local
@@ -57,8 +66,8 @@ def test_device_post_local_wrong():
         api=API_DEVICE_LOCAL,
         post_adapter=requests_adapter_post,
         use_right_head=False)
-    print(f'{device_respond}')
-    assert device_respond.Res_code == 0
+    print(f'resp:{device_respond}')
+    assert device_respond.Code == 4000
 
 
 @pytest.mark.local
