@@ -52,6 +52,16 @@ def test_device_post_local():
 
 
 @pytest.mark.local
+def test_device_post_local_wrong():
+    device_respond = post_device_with_adapter(
+        api=API_DEVICE_LOCAL,
+        post_adapter=requests_adapter_post,
+        use_right_head=False)
+    print(f'{device_respond}')
+    assert device_respond.Res_code == 0
+
+
+@pytest.mark.local
 def test_device_local():
     device_items = retrieve_devices_with_adapter(
         api=API_DEVICE_LOCAL,
@@ -80,7 +90,7 @@ def test_todo_post_contoso():
     assert todo_item.item_id >= 1
 
 
-#@pytest.mark.skip(reason="only test in primax")
+# @pytest.mark.skip(reason="only test in primax")
 @pytest.mark.remote
 def test_todo_remote():
     todo_items = retrieve_todos_with_adapter(
@@ -90,7 +100,7 @@ def test_todo_remote():
         assert item.item_id >= 1
 
 
-#@pytest.mark.skip(reason="only test in primax")
+# @pytest.mark.skip(reason="only test in primax")
 @pytest.mark.remote
 def test_todo_post_remote():
     todo_item = post_todo_with_adapter(

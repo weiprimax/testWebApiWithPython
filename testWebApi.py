@@ -3,6 +3,7 @@ from ctypes.wintypes import LONG
 import dataclasses
 import os
 import json
+from pickle import FALSE, TRUE
 import time
 import calendar
 import hashlib
@@ -18,6 +19,7 @@ from api_lib import *
 API_KEY = "a52f97f5da4ba6672b101d6780af590a"
 BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
 API = BASE_URL + "?q={city_name}&appid={api_key}&units=metric"
+DEVICE_NAME = "deviceXXX"
 
 
 @dataclass
@@ -158,7 +160,7 @@ def requests_adapter_post(url: str, body, header, pem=False) -> dict:
     resp = requests.post(url, data=json.dumps(body),
                          headers=header, verify=pem)
     print(f'get status code:{resp.status_code}')
-    resp.raise_for_status()
+    #resp.raise_for_status()
     return resp.json()
 
 
@@ -176,8 +178,20 @@ def init_todo_body(body: dict):
 
 def init_device_header(headers: dict):
     time_stamp = str(calendar.timegm(time.gmtime()))
-    device_id = "deviceXXX"
+    device_id = DEVICE_NAME
     str_md5_input = device_id + time_stamp
+    result = hashlib.md5(str_md5_input.encode())
+    token = result.hexdigest()
+    headers['Content-Type'] = 'application/json'
+    headers['Age'] = '20'
+    headers['token'] = token
+    headers['accept'] = 'text/plain'
+    headers['timestamp'] = time_stamp
+
+
+def init_device_header_wrong(headers: dict):
+    time_stamp = str(calendar.timegm(time.gmtime()))
+    str_md5_input = time_stamp
     result = hashlib.md5(str_md5_input.encode())
     token = result.hexdigest()
     headers['Content-Type'] = 'application/json'
@@ -226,10 +240,14 @@ def retrieve_devices_with_adapter(
     return items
 
 
-def post_device_with_adapter_inner(api: str, post_adapter: Callable[[str, Any, Any], dict], pem=False) -> dict:
+def post_device_with_adapter_inner(api: str, post_adapter: Callable[[str, Any, Any], dict], pem=False, use_right_head=True) -> dict:
     url = api
     headers, body = {}, {}
-    init_device_header(headers)
+    if use_right_head:
+        init_device_header(headers)
+    else:
+        init_device_header_wrong(headers)
+
     print(f'init:{headers}')
     init_device_body(body)
     print(f'init:{body}')
@@ -237,11 +255,14 @@ def post_device_with_adapter_inner(api: str, post_adapter: Callable[[str, Any, A
 
 
 def post_device_with_adapter(
-    api: str, post_adapter: Callable[[str, Any, Any], dict] = requests_adapter, pem=False
+    api: str, post_adapter: Callable[[str, Any, Any], dict] = requests_adapter, pem=False, use_right_head=True
 ) -> LiteDbDeviceItemRespond:
     """Retrieve respond after post deviceItem."""
     data = post_device_with_adapter_inner(
-        api, post_adapter=post_adapter, pem=pem)
+        api,
+        post_adapter=post_adapter,
+        pem=pem,
+        use_right_head=use_right_head)
     return LiteDbDeviceItemRespond.from_dict(data)
 
 
