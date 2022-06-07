@@ -5,14 +5,14 @@ ROUTE_TODO_DB ="api/LiteDbTodoItems"
 CERT_CONTOSO = "contoso.com.crt"
 PEM_CONTOSO = "contoso.com.pem"
 
-ROUTE_DEVICE_DB = "api/LiteDbDeviceItems"
-
+#ROUTE_DEVICE_DB = "api/LiteDbDeviceItems"
+ROUTE_DEVICE_DB = "v1/devices/version_check"
 
 #  test local
 
-BASE_URL_LOCAL = "http://10.1.26.50:5556/"
+#BASE_URL_LOCAL = "http://10.1.26.50:5556/"
 
-# BASE_URL_LOCAL = "http://192.168.0.112:5556/"
+BASE_URL_LOCAL = "http://192.168.56.1:5556/"
 
 API_TODO_LOCAL = BASE_URL_LOCAL + ROUTE_TODO_DB
 

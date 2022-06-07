@@ -190,6 +190,7 @@ def init_device_header(headers: dict):
 def init_device_body(body: dict):
     body['device_id'] = 'deviceXXX'
     body['product_code'] = 'TTXX'
+    body['fw_version'] = '"v2.0.0'
 
 
 def post_todo_with_adapter_inner(api: str, post_adapter: Callable[[str, Any, Any], dict], pem=False) -> dict:
