@@ -47,8 +47,8 @@ class LiteDbDeviceItemRespondFwData:
 
     def from_dict(cls, data: dict) -> "LiteDbDeviceItemRespondFwData":
         return cls(
-            new_version=data['new_Version'],
-            fw_link=data['fw_Link']
+            new_version=data['new_version'],
+            fw_link=data['fw_link']
         )
 
 
@@ -281,6 +281,7 @@ def post_device_with_adapter(
         pem=pem,
         use_right_head=use_right_head,
         fw_version=fw_version)
+    print(f'resp data:{data}')
     return LiteDbDeviceItemRespond.from_dict(data)
 
 
