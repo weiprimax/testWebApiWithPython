@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-ROUTE_TODO_DB ="api/LiteDbTodoItems"
+ROUTE_TODO_DB = "api/LiteDbTodoItems"
 
 CERT_CONTOSO = "contoso.com.crt"
 PEM_CONTOSO = "contoso.com.pem"
@@ -43,3 +43,12 @@ BASE_URL_PRIMAX = "http://pthqdkssw.primax.com.tw:5555/"
 API_TODO_PRIMAX = BASE_URL_PRIMAX + ROUTE_TODO_DB
 
 API_DEVICE_PRIMAX = BASE_URL_PRIMAX + ROUTE_DEVICE_DB
+
+
+#  test primax ssl
+
+BASE_URL_PRIMAX_SSL = "http://pthqdkssw.primax.com.tw:443/"
+
+API_TODO_PRIMAX_SSL = BASE_URL_PRIMAX_SSL + ROUTE_TODO_DB
+
+API_DEVICE_PRIMAX_SSL = BASE_URL_PRIMAX_SSL + ROUTE_DEVICE_DB

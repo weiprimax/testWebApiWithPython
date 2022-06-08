@@ -25,6 +25,7 @@ FW_VERSION_OLD = "v1.0.0"
 FW_VERSION_NEW = "v3.0.0"
 FW_VERSION_NEW2 = "v3.0.1"
 
+
 @dataclass
 class LiteDbDeviceItem:
     Id: int
