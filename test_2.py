@@ -24,6 +24,24 @@ def test_weather():
     assert weather_info.temp > 0
 
 
+@pytest.mark.lex
+def test_device_post_lex():
+    device_respond = post_device_with_adapter(
+        api=API_DEVICE_LOCAL_EX,
+        post_adapter=requests_adapter_post, fw_version=FW_VERSION_OLD)
+    print(f'resp:{device_respond}')
+    assert device_respond.Code == 2000
+    assert FW_VERSION_NEW in device_respond.fwdata.new_version
+    assert "http" in device_respond.fwdata.fw_link
+    device_respond = post_device_with_adapter(
+        api=API_DEVICE_LOCAL_EX,
+        post_adapter=requests_adapter_post, fw_version=FW_VERSION_NEW)
+    print(f'resp:{device_respond}')
+    assert device_respond.Code == 2000
+    assert FW_VERSION_NEW2 in device_respond.fwdata.new_version
+    assert "http" in device_respond.fwdata.fw_link
+
+
 @pytest.mark.skip(reason="skip todo")
 @pytest.mark.local
 def test_todo_local():

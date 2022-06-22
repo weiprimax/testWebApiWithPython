@@ -8,6 +8,15 @@ PEM_CONTOSO = "contoso.com.pem"
 #ROUTE_DEVICE_DB = "api/LiteDbDeviceItems"
 ROUTE_DEVICE_DB = "v1/devices/version_check"
 
+# test local IIS express
+
+BASE_URL_LOCAL_EX = "https://localhost:7148/"
+
+API_TODO_LOCAL_EX = BASE_URL_LOCAL_EX + ROUTE_TODO_DB
+
+API_DEVICE_LOCAL_EX = BASE_URL_LOCAL_EX + ROUTE_DEVICE_DB
+
+
 #  test local
 
 #BASE_URL_LOCAL = "http://10.1.26.50:5556/"
