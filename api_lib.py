@@ -4,9 +4,16 @@ ROUTE_TODO_DB = "api/LiteDbTodoItems"
 
 CERT_CONTOSO = "contoso.com.crt"
 PEM_CONTOSO = "contoso.com.pem"
+PEM_ANKER = "AmazonRootCA1.pem"
 
 #ROUTE_DEVICE_DB = "api/LiteDbDeviceItems"
 ROUTE_DEVICE_DB = "v1/devices/version_check"
+
+# test Anker
+
+BASE_URL_ANKER = "https://ankerdock-api-ci.anker.com/"
+
+API_DEVICE_ANKER = BASE_URL_ANKER + ROUTE_DEVICE_DB
 
 # test local IIS express
 

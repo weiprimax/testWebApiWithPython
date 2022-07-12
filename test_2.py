@@ -80,6 +80,7 @@ def test_device_post_local():
     assert "http" in device_respond.fwdata.fw_link
 
 
+@pytest.mark.skip(reason="skip 1")
 @pytest.mark.local
 def test_device_post_local_wrong():
     device_respond = post_device_with_adapter(
@@ -90,6 +91,7 @@ def test_device_post_local_wrong():
     assert device_respond.Code == 4000
 
 
+@pytest.mark.skip(reason="skip 2")
 @pytest.mark.local
 def test_device_local():
     device_items = retrieve_devices_with_adapter(
@@ -288,3 +290,11 @@ def test_device_primax_ssl():
         adapter=requests_adapter)
     for item in device_items:
         assert item.Id >= 1
+
+
+@pytest.mark.ankerssl
+def test_device_anker_ssl():
+    device_respond = post_device_with_adapter(
+        API_DEVICE_ANKER,
+        post_adapter=requests_adapter_post, fw_version=FW_VERSION_090, pem=PEM_ANKER)
+    print(f'resp:{device_respond}')

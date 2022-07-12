@@ -20,10 +20,12 @@ from api_lib import *
 API_KEY = "a52f97f5da4ba6672b101d6780af590a"
 BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
 API = BASE_URL + "?q={city_name}&appid={api_key}&units=metric"
-DEVICE_NAME = "deviceXXX"
+DEVICE_NAME = "00007928-6216-4353-a38a-78d2ca9ce47f"
+PRODUCT_CODE = "A83A9"
 FW_VERSION_OLD = "v1.0.0"
 FW_VERSION_NEW = "v3.0.0"
 FW_VERSION_NEW2 = "v3.0.1"
+FW_VERSION_090 = "v0.9.0"
 
 
 @dataclass
@@ -203,7 +205,7 @@ def init_device_header(headers: dict):
     headers['Content-Type'] = 'application/json'
     headers['Age'] = '20'
     headers['token'] = token
-    headers['accept'] = 'text/plain'
+    headers['accept'] = 'application/json'
     headers['timestamp'] = time_stamp
 
 
@@ -220,8 +222,8 @@ def init_device_header_wrong(headers: dict):
 
 
 def init_device_body(body: dict, fw_version: str):
-    body['device_id'] = 'deviceXXX'
-    body['product_code'] = 'TTXX'
+    body['device_id'] = DEVICE_NAME
+    body['product_code'] = PRODUCT_CODE
     body['fw_version'] = fw_version
 
 
