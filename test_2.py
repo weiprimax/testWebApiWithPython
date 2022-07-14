@@ -259,14 +259,14 @@ def test_todo_post_primax_ssl():
 def test_device_post_primax_ssl():
     device_respond = post_device_with_adapter(
         api=API_DEVICE_PRIMAX_SSL,
-        post_adapter=requests_adapter_post, fw_version=FW_VERSION_OLD)
+        post_adapter=requests_adapter_post, fw_version=FW_VERSION_OLD, pem=PEM_PXSSL)
     print(f'resp:{device_respond}')
     assert device_respond.Code == 2000
     assert FW_VERSION_NEW in device_respond.fwdata.new_version
     assert "http" in device_respond.fwdata.fw_link
     device_respond = post_device_with_adapter(
         api=API_DEVICE_PRIMAX_SSL,
-        post_adapter=requests_adapter_post, fw_version=FW_VERSION_NEW)
+        post_adapter=requests_adapter_post, fw_version=FW_VERSION_NEW, pem=PEM_PXSSL)
     print(f'resp:{device_respond}')
     assert device_respond.Code == 2000
     assert FW_VERSION_NEW2 in device_respond.fwdata.new_version
@@ -278,7 +278,7 @@ def test_device_post_primax_ssl_wrong():
     device_respond = post_device_with_adapter(
         api=API_DEVICE_PRIMAX_SSL,
         post_adapter=requests_adapter_post,
-        use_right_head=False)
+        use_right_head=False, pem=PEM_PXSSL)
     print(f'resp:{device_respond}')
     assert device_respond.Code == 4000
 
@@ -287,7 +287,7 @@ def test_device_post_primax_ssl_wrong():
 def test_device_primax_ssl():
     device_items = retrieve_devices_with_adapter(
         api=API_DEVICE_PRIMAX_SSL,
-        adapter=requests_adapter)
+        adapter=requests_adapter, pem=PEM_PXSSL)
     for item in device_items:
         assert item.Id >= 1
 
@@ -297,4 +297,11 @@ def test_device_anker_ssl():
     device_respond = post_device_with_adapter(
         API_DEVICE_ANKER,
         post_adapter=requests_adapter_post, fw_version=FW_VERSION_090, pem=PEM_ANKER)
+    print(f'resp:{device_respond}')
+
+@pytest.mark.ankerssl
+def test_device_anker_ssl_no_pem():
+    device_respond = post_device_with_adapter(
+        API_DEVICE_ANKER,
+        post_adapter=requests_adapter_post, fw_version=FW_VERSION_090)
     print(f'resp:{device_respond}')
