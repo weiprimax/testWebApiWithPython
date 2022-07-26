@@ -67,7 +67,7 @@ class LiteDbDeviceItemRespond:
             cls=LiteDbDeviceItemRespondFwData, data=data["data"]) if data["data"] else None
         return cls(
             Code=data["code"],
-            Message=data["message"],
+            Message=data["msg"],
             fwdata=input_data
         )
 
