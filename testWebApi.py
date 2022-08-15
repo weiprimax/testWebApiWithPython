@@ -118,8 +118,12 @@ def main():
     print(f'hello: {CERT_CONTOSO} {API_TODO_LOCAL}')
     pem_path = os.path.join(os.getcwd(), PEM_CONTOSO)
     print(pem_path)
-    retrieve_todos_with_adapter(
-        api=API_TODO_CONTOSO, adapter=requests_adapter, pem=pem_path)
+    #retrieve_todos_with_adapter(
+    #    api=API_TODO_CONTOSO, adapter=requests_adapter, pem=pem_path)
+    device_respond = post_device_with_adapter(
+        API_VERSION_CHECK_ANKER,
+        post_adapter=requests_adapter_post, fw_version=FW_VERSION_090, pem=PEM_ANKER)
+    print(f'resp:{device_respond}')
 
 
 def cube(n):

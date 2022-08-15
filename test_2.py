@@ -295,13 +295,21 @@ def test_device_primax_ssl():
 @pytest.mark.ankerssl
 def test_device_anker_ssl():
     device_respond = post_device_with_adapter(
-        API_DEVICE_ANKER,
+        API_VERSION_CHECK_ANKER,
         post_adapter=requests_adapter_post, fw_version=FW_VERSION_090, pem=PEM_ANKER)
     print(f'resp:{device_respond}')
 
 @pytest.mark.ankerssl
 def test_device_anker_ssl_no_pem():
     device_respond = post_device_with_adapter(
-        API_DEVICE_ANKER,
+        API_VERSION_CHECK_ANKER,
         post_adapter=requests_adapter_post, fw_version=FW_VERSION_090)
+    print(f'resp:{device_respond}')
+
+
+@pytest.mark.ankerssl
+def test_device_anker_ssl_base():
+    device_respond = post_device_with_adapter(
+        API_VERSION_BASE_ANKER,
+        post_adapter=requests_adapter_post, pem=PEM_ANKER)
     print(f'resp:{device_respond}')
