@@ -359,8 +359,20 @@ def test_device_anker_ssl_no_pem():
     print(f"resp:{device_respond}")
 
 
-#@pytest.mark.ankerssl
-#def test_device_anker_ssl_base():
+@pytest.mark.ankerssl
+def test_device_post_anker_ssl_wrong():
+    device_respond = post_device_with_adapter(
+        api=API_VERSION_CHECK_ANKER,
+        post_adapter=requests_adapter_post,
+        use_right_head=False,
+        pem=PEM_ANKER,
+    )
+    print(f"resp:{device_respond}")
+    assert device_respond.Code == 4000
+
+
+# @pytest.mark.ankerssl
+# def test_device_anker_ssl_base():
 #    device_respond = post_device_with_adapter(
 #        API_VERSION_BASE_ANKER, post_adapter=requests_adapter_post, pem=PEM_ANKER
 #    )
@@ -392,3 +404,15 @@ def test_device_post_anker_ssl_base_new():
     assert device_respond.Code == 2000
     # assert FW_VERSION_NEW2 in device_respond.fwdata.new_version
     assert "" in device_respond.fwdata.fw_link
+
+
+@pytest.mark.ankerssl
+def test_device_post_anker_ssl_base_wrong():
+    device_respond = post_device_with_adapter(
+        api=API_VERSION_BASE_ANKER,
+        post_adapter=requests_adapter_post,
+        use_right_head=False,
+        pem=PEM_ANKER,
+    )
+    print(f"resp:{device_respond}")
+    assert device_respond.Code == 4000
