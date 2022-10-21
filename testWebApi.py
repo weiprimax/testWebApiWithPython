@@ -22,10 +22,10 @@ BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
 API = BASE_URL + "?q={city_name}&appid={api_key}&units=metric"
 DEVICE_NAME = "00007928-6216-4353-a38a-78d2ca9ce47f"
 PRODUCT_CODE = "A83A9"
-FW_VERSION_OLD = "v0.0.0"
-FW_VERSION_NEW = "v19.0.1"
-FW_VERSION_NEW2 = "v3.0.1"
-FW_VERSION_090 = "v0.9.0"
+FW_VERSION_OLD = "V0.0.0"
+FW_VERSION_NEW = "V99.9.9"
+FW_VERSION_NEW2 = "V3.0.1"
+FW_VERSION_090 = "V0.9.0"
 
 
 @dataclass
